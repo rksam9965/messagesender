@@ -6,6 +6,7 @@ import 'package:mailer/smtp_server.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:messagesender/widget/Textfield.dart';
+import 'package:messagesender/widget/custome_alert.dart';
 
 class MailPage extends StatefulWidget {
   const MailPage({super.key});
@@ -50,12 +51,16 @@ class _MailPageState extends State<MailPage> {
       ..subject = subject
       ..text = body;
 
+    displayProgress(context); // Show progress before starting the task
+
     try {
       await send(message, smtpServer);
       showSnackbar("Email sent successfully!");
     } on MailerException catch (e) {
       debugPrint('Message not sent. Error: ${e.toString()}');
       showSnackbar("Failed to send email.");
+    } finally {
+      hideProgress(context); // Hide progress regardless of success or failure
     }
   }
 
